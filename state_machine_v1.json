@@ -1,68 +1,80 @@
 {
-    "StartAt": "ImportDataSet",
+    "StartAt": "startTranscribeJob",
     "States": {
-        "ImportDataSet": {
-            "Type": "Task",
-            "Resource": "arn:aws:lambda:us-east-1:881464459139:function:createPersonalizeImportJob",
-            "Next": "CheckImportData"
+        "startTranscribeJob": {
+            "Type": "Pass",
+            "Resource": "",
+            "Next": "getTranscribeJobStatus"
         },
 
-        "CheckImportData": {
-            "Type": "Task",
-            "Resource": "arn:aws:lambda:us-east- 1:881464459139:function:checkImportDataPersonalize",
-            "Next": "IsImportJobActive?"
+        "getTranscribeJobStatus": {
+            "Type": "Pass",
+            "Resource": "",
+            "Next": "trasncribeJobCompleted?"
         },
 
-        "IsImportJobActive?": {
+        "trasncribeJobCompleted?": {
             "Type": "Choice",
             "Choices": [
                 {
-                    "Variable": "$.importStatus",
+                    "Variable": "$.transcribeJobStatus",
                     "StringEquals": "ACTIVE",
-                    "Next": "TrainNewSolution"
+                    "Next": "persistTranscribeJobData"
                 }
             ],
-            "Default": "WaitForImportJob"
+            "Default": "waitTranscribeJob"
         },
 
-        "WaitForImportJob": {
+        "waitTranscribeJob": {
             "Type": "Wait",
             "Seconds": 60,
-            "Next": "CheckImportData"
+            "Next": "getTranscribeJobStatus"
+        },
+
+        "persistTranscribeJobData": {
+            "Type": "Pass",
+            "Resource": "",
+            "Next": "startComprehendJob"
+        },
+
+        "startComprehendJob": {
+            "Type": "Pass",
+            "Resource": "",
+            "Next": "getComprehendJobStatus"
         },
         
-        "TrainNewSolution": {
-            "Type": "Task",
-            "Resource": "arn:aws:lambda:us-east- 1:881464459139:function:startTrainingPersonalize",
-            "Next": "CheckSolutionStatus"
+        "getComprehendJobStatus": {
+            "Type": "Pass",
+            "Resource": "",
+            "Next": "comprehendJobCompleted?"
         },
         
-        "CheckSolutionStatus": {
-            "Type": "Task",
-            "Resource": "arn:aws:lambda:us-east-1:881464459139:function:checkTrainingStatus",
-            "Next": "IsSolutionActive?"
-        },
-        
-        "IsSolutionActive?": {
+        "comprehendJobCompleted?": {
             "Type": "Choice",
             "Choices": [
                 {
-                    "Variable": "$.trainingStatus",
+                    "Variable": "$.comprehendJobStatus",
                     "StringEquals": "ACTIVE",
-                    "Next": "UpdateCampaign"
+                    "Next": "persistComprehendJobData"
                 }
             ],
-            "Default": "WaitForSolution"
+            "Default": "waitComprehendJob"
         },
         
-        "WaitForSolution": {
+        "waitComprehendJob": {
             "Type": "Wait",
             "Seconds": 600,
-            "Next": "CheckSolutionStatus"
+            "Next": "getComprehendJobStatus"
+        },
+
+        "persistComprehendJobData": {
+            "Type": "Pass",
+            "Resource": "",
+            "Next": "finishWorkflow"
         },
         
-        "UpdateCampaign": {
-            "Type": "Task",
+        "finishWorkflow": {
+            "Type": "Pass",
             "Resource": "",
             "End": true
         }
