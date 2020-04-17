@@ -1,0 +1,70 @@
+{
+    "StartAt": "ImportDataSet",
+    "States": {
+        "ImportDataSet": {
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:us-east-1:881464459139:function:createPersonalizeImportJob",
+            "Next": "CheckImportData"
+        },
+
+        "CheckImportData": {
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:us-east- 1:881464459139:function:checkImportDataPersonalize",
+            "Next": "IsImportJobActive?"
+        },
+
+        "IsImportJobActive?": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Variable": "$.importStatus",
+                    "StringEquals": "ACTIVE",
+                    "Next": "TrainNewSolution"
+                }
+            ],
+            "Default": "WaitForImportJob"
+        },
+
+        "WaitForImportJob": {
+            "Type": "Wait",
+            "Seconds": 60,
+            "Next": "CheckImportData"
+        },
+        
+        "TrainNewSolution": {
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:us-east- 1:881464459139:function:startTrainingPersonalize",
+            "Next": "CheckSolutionStatus"
+        },
+        
+        "CheckSolutionStatus": {
+            "Type": "Task",
+            "Resource": "arn:aws:lambda:us-east-1:881464459139:function:checkTrainingStatus",
+            "Next": "IsSolutionActive?"
+        },
+        
+        "IsSolutionActive?": {
+            "Type": "Choice",
+            "Choices": [
+                {
+                    "Variable": "$.trainingStatus",
+                    "StringEquals": "ACTIVE",
+                    "Next": "UpdateCampaign"
+                }
+            ],
+            "Default": "WaitForSolution"
+        },
+        
+        "WaitForSolution": {
+            "Type": "Wait",
+            "Seconds": 600,
+            "Next": "CheckSolutionStatus"
+        },
+        
+        "UpdateCampaign": {
+            "Type": "Task",
+            "Resource": "",
+            "End": true
+        }
+    }
+}
