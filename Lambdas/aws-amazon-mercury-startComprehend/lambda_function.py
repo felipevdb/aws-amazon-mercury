@@ -1,34 +1,60 @@
 import json
-import logging
 import boto3
+import uuid
+import json
+from urllib.parse import unquote_plus
+
+comprehend_client = boto3.client(service_name='comprehend', region_name='us-east-1')
+s3_client = boto3.client('s3')
+
 
 def lambda_handler(event, context):
-    # TODO implement
-    comprehend = boto3.client(service_name='comprehend', region_name='us-east-1')
-    text = "Us is a 2019 American horror film written and directed by Jordan Peele, starring Lupita Nyong'o, Winston Duke, Elisabeth Moss, and Tim Heidecker. The film follows Adelaide Wilson (Nyong'o) and her family, who are attacked by a group of mysterious doppelgängers. The project was announced in February 2018, and much of the cast joined in the following months. Peele produced the film alongside Jason Blum and Sean McKittrick (with the trio previously having collaborated on Get Out and BlacKkKlansman), as well as Ian Cooper. Filming took place from July to October 2018 in California, mostly in Los Angeles and Pasadena and also in Santa Cruz. Us had its world premiere at South by Southwest on March 8, 2019, and was theatrically released in the United States on March 22, 2019, by Universal Pictures. It was a critical and commercial success, grossing $255 million worldwide against a budget of $20 million, and received praise for Peele's screenplay and direction, as well as the musical score and Nyong'o's performance."
     
-    #Detectar linguagem
-    languageJson = comprehend.detect_dominant_language(Text = text)
-  
-    #Detectar entidades
-    entityJson = comprehend.detect_entities(Text=text, LanguageCode='en')
-
-    #Detectar Palavras chaves
-    keywordJson = comprehend.detect_key_phrases(Text=text, LanguageCode='en')
-
-    #Detectar Sentimento
-    feelingJson = comprehend.detect_sentiment(Text=text, LanguageCode='en')
+    print(event)
     
-    #Detectar Sintaxes
-    syntaxJson = comprehend.detect_syntax(Text=text, LanguageCode='en')
-    
-    
+    for record in event['Records']:
+        s3BucketName = record['s3']['bucket']['name']
+        s3ObjectKey = unquote_plus(record['s3']['object']['key'])
+        print(s3BucketName)
+        print(s3ObjectKey)
+        
+        S3URi= "s3://%s/%s"%(s3BucketName,s3ObjectKey)
+        
+        response = comprehend_client.start_sentiment_detection_job(
+            JobName = "comprehend-transcriptionText-%s"%(s3ObjectKey.replace('transcriptionText/', '').replace('.txt', '')),
+            InputDataConfig={
+                'S3Uri': S3URi,
+                'InputFormat': 'ONE_DOC_PER_FILE'
+            },
+            OutputDataConfig={
+                'S3Uri': "s3://%s/comprehendTEST"%(s3BucketName)
+            },
+            LanguageCode = 'en',
+            DataAccessRoleArn= 'arn:aws:iam::544464437166:role/service-role/AmazonComprehendServiceRoleS3FullAccess-teste'
+        )
+        
     return {
         'statusCode': 200,
-        'body' : {
-            "languageOutput": languageJson,
-            "entityOutput": entityJson,
-            "keywordOutput": keywordJson,
-            "feelingOutput": feelingJson
-        }
+        'body': json.dumps('Hello from Lambda!')
     }
+
+# Function for detecting sentiment
+def detect_sentiment(text):
+    response = comprehend_client.start_sentiment_detection_job()
+    return response
+    
+    
+# Function for detecting named entities
+def detect_entities(text):
+    response = comprehend_client.detect_entities(Text=text, LanguageCode='en')
+    return response
+
+# Function for detecting key phrases
+def detect_key_phraes(text):
+    response = comprehend_client.detect_key_phrases(Text=text, LanguageCode='en')
+    return response
+
+# Function for detecting Sintax
+def detect_sintax(text):
+    response = comprehend_client.detect_syntax(Text=text, LanguageCode='en')
+    return response
