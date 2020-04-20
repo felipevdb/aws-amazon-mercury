@@ -1,0 +1,47 @@
+{
+   "Records":[
+      {
+         "eventVersion":"2.1",
+         "eventSource":"aws:s3",
+         "awsRegion":"us-east-1",
+         "eventTime":"2020-04-19T14:38:47.131Z",
+         "eventName":"ObjectCreated:CompleteMultipartUpload",
+         "userIdentity":{
+            "principalId":"AWS:AROAX5RE376XCR4DTZSKW:felbrito-Isengard"
+         
+},
+         "requestParameters":{
+            "sourceIPAddress":"72.21.198.65"
+         
+},
+         "responseElements":{
+            "x-amz-request-id":"7E8CD649C3601570",
+            "x-amz-id-2":"cLSLgrVoz4eJXj+rUFFVM1uMaCaZ/lc4I/RJcnFkPUhoc0SekeppVbLa4bojYmMpGxqn3IVULlxbB8Xv8r88CKhNIcKi0Vqo"
+         
+},
+         "s3":{
+            "s3SchemaVersion":"1.0",
+            "configurationId":"b3e626f7-e360-4864-8851-d261fd7fae42",
+            "bucket":{
+               "name":"amazon-mercury-bucket",
+               "ownerIdentity":{
+                  "principalId":"A2WPQA9PEUVFMC"
+               
+},
+               "arn":"arn:aws:s3:::amazon-mercury-bucket"
+            
+},
+            "object":{
+               "key":"sourceAudio/AWS_Podcast_Episode_364.mp3",
+               "size":39637793,
+               "eTag":"adb021ec700ab18bb50d56db4dcecc49-3",
+               "sequencer":"005E9C6248E6166EF8"
+            
+}
+         
+}
+      
+}
+   
+]
+}
