@@ -7,18 +7,6 @@ import audio from '../img/audio.png';
 
 import StatusModal from './statusmodal';
 
-function fileMetadata(file){
-  var video = document.createElement('video');
-  video.preload = 'metadata';
-  video.onloadedmetadata = function() {
-
-    window.URL.revokeObjectURL(video.src);
-
-  }
-  video.src = URL.createObjectURL(file);
-  let teste = video.duration
-  return teste
-}
 
 const uuidv4 = require('uuid/v4');
 
@@ -128,7 +116,13 @@ class Upload extends Component {
     e.preventDefault();
     let reader = new FileReader();
     let file = e.target.files[0];
-    let test = fileMetadata(file);
+    var video = document.createElement('video');
+    video.preload = 'metadata';
+    video.onloadedmetadata = function () {
+    window.URL.revokeObjectURL(video.src);
+    };
+    video.src = URL.createObjectURL(file);
+    
     if (file) {
       if (file.size <= 100000000) {
           let file_type = file.type.split('/')[0];
@@ -138,7 +132,7 @@ class Upload extends Component {
               "media_file": reader.result,
               "media_type": file_type,
               "error": false,
-              "audioDuration": test
+              "audioDuration": video.duration
             });
           }
           reader.readAsDataURL(file)
