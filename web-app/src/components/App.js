@@ -1,7 +1,6 @@
 /* React and Amplify libraries Imports */
 import React, { Component } from 'react'
 import Amplify from 'aws-amplify';
-import awsconfig from '../aws-exports';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { NavbarBrand, Navbar, Nav, NavItem, NavLink } from 'reactstrap';
 
