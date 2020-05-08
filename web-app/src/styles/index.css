@@ -1,0 +1,15 @@
+html * {
+	font-family: AmazonEmberBold,Helvetica Neue Bold,Helvetica Neue,Helvetica,Arial,sans-serif !important;
+}
+
+a:hover {
+  color: #FF9900;
+}
+
+a {
+  color: #E1E4EA;
+}
+
+.bg-dark {
+    background-color: #31465F !important;
+}
