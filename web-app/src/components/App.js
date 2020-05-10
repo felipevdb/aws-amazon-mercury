@@ -51,7 +51,7 @@ class App extends Component {
         <Router>
           <div>
             <Navbar color="dark">
-              <NavbarBrand tag={Link} to="/home">Media Analysis Solution</NavbarBrand>
+              <NavbarBrand tag={Link} to="/home">Amazon Mercury</NavbarBrand>
               <Nav className="ml-auto">
                 <NavItem color="white">
                   <NavLink tag={Link} to="/upload" className="text-light">Upload</NavLink>
