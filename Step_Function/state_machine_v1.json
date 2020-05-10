@@ -1,4 +1,5 @@
 {
+    "Comment": "State machine that orchestrates the execution of Transcribe/Comprehend Jobs with the insertion of a .mp3 file",
     "StartAt": "startTranscribeJob",
     "States": {
         "startTranscribeJob": {

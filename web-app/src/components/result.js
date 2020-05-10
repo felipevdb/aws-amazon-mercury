@@ -12,6 +12,7 @@ class Result extends Component {
 	    super(props);
       this.state = {
         filename: '', //needed
+        meetingName: '',//needed
         media_file: preview, //needed
         label_list: [], //needed
         face_list: [], //needed
@@ -51,7 +52,6 @@ class Result extends Component {
   componentDidMount() {
     var self = this;
 
-    var path = ['/details',this.props.match.params.objectid].join('/');
     var url = ['https://rehns3s8gj.execute-api.us-east-1.amazonaws.com/prod','/details',this.props.match.params.objectid].join('/');
     var myHeaders = new Headers();
       var raw = "";
@@ -90,9 +90,9 @@ class Result extends Component {
                         })
                     })
                     self.setState({
-                        //#filename: data.
+                        filename: data.fileName,
+                        meetingName: data.meetingName
                     });
-
                     
                 });
         }).catch(function(err) {
@@ -224,36 +224,6 @@ class Result extends Component {
     if (this.state) {
         //var self = this;
         
-        var phrases = this.state.phrase_list.map(phrase => {
-          //bugfix/media-analysis-75 button Ids cannot start with a digits
-            if (phrase.Id.match(/^\d/)) {
-              phrase.Id = 'n'+phrase.Id;
-            }
-
-            return(
-              <div style={{"display":"inline-block"}}>
-                <Button id={phrase.Id.replace(/\s+/g, '-').toLowerCase()} color="secondary" className="ml-1 mr-1 mb-1 mt-1">{phrase.Name}</Button>
-                <UncontrolledTooltip placement="top" target={phrase.Id.replace(/\s+/g, '-').toLowerCase()}>
-                  {phrase.Confidence.toFixed(3)}
-                </UncontrolledTooltip>
-              </div>
-            )
-        });
-
-        var entities = this.state.entity_list.map(entity => {
-          //bugfix/media-analysis-75 button Ids cannot start with a digits
-            if (entity.Id.match(/^\d/)) {
-              entity.Id = 'n'+entity.Id;
-            }
-            return(
-              <div style={{"display":"inline-block"}}>
-                <Button id={entity.Id.replace(/\s+/g, '-').toLowerCase()} color="secondary" className="ml-1 mr-1 mb-1 mt-1">{entity.Name}</Button>
-                <UncontrolledTooltip placement="top" target={entity.Id.replace(/\s+/g, '-').toLowerCase()}>
-                  {entity.Confidence.toFixed(3)}
-                </UncontrolledTooltip>
-              </div>
-            )
-        });
 
         //let persons = this.state.persons;
         let transcript = this.state.transcript;
@@ -271,7 +241,7 @@ class Result extends Component {
                     <Progress animated color="warning" value="100" />
                     </ModalBody>
                 </Modal>
-                    <AudioResults mediafile={this.state.media_file} filename={this.state.filename} filetype={this.state.file_type} transcript={transcript} captions={this.state.captions} phrases={phrases} entities={entities}/>
+                    <AudioResults mediafile={this.state.media_file} meetingName={this.state.meetingName} filename={this.state.filename} filetype={this.state.file_type}  transcript={transcript}/>
                 </div>
 
             );
