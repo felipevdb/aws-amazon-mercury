@@ -13,3 +13,11 @@ a {
 .bg-dark {
     background-color: #31465F !important;
 }
+
+#root{
+	text-align: center;
+}
+
+hr{
+	border: none;
+}
