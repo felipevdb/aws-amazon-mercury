@@ -10,23 +10,11 @@ class StatusModal extends Component {
   	    super(props);
         this.state = {
           state_machine_color: "warning",
-          state_machine_value: "75",
-          labels_color: "warning",
-          labels_value: "50",
-          faces_color: "warning",
-          faces_value: "50",
-          face_matches_color: "warning",
-          face_matches_value: "50",
-          celebs_color: "warning",
-          celebs_value: "50",
-          persons_color: "warning",
-          persons_value: "50",
+          state_machine_value: "15",
           transcript_color: "warning",
           transcript_value: "50",
-          entities_color: "warning",
-          entities_value: "50",
-          phrases_color: "warning",
-          phrases_value: "50",
+          comprehend_color: "warning",
+          comprehend_value: "0",
           button: true
         }
         this.getStatus = this.getStatus.bind(this);
@@ -43,55 +31,75 @@ class StatusModal extends Component {
     getStatus() {
       var self = this;
       var requestParams = {};
-      var path = ['/status',this.props.objectid].join('/');
+      var url = ['URL','status',this.props.objectid].join('/');
+      var myHeaders = new Headers();
+      var raw = "";
 
-      var interval = setInterval(function(){ getStateMachineStatus() },5000);
+      var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+      };
+
+      var interval = setInterval(function(){ getStateMachineStatus() },25000);
+
       function getStateMachineStatus() {
-          API.get('MediaAnalysisApi', path, requestParams)
-            .then(function(response) {
-              //console.log(response);
-
+        fetch(url, requestOptions)
+        .then(
+          function(response) {
+            if (response.status !== 200) {
+              console.log('Looks like there was a problem. Status Code: ' +
+                response.status);
+              return;
+            }
+      
+            // Examine the text in the response
+            response.json().then(function(data) {
+              if(data.status === "RUNNING"){
+                if((data.transcribe === "SUCCEEDED") && (data.Comprehend === "RUNNING") && (data.ComprehendAsync === "NOT STARTED")){
+                  self.setState({
+                    state_machine_value: "35",
+                    transcript_color: "success",
+                    transcript_value: "100",
+                    comprehend_value: "30",
+                  })
+                }
+                  if((data.transcribe === "SUCCEEDED") && (data.Comprehend === "SUCCEEDED") && (data.ComprehendAsync === "RUNNING")){
+                    self.setState({
+                      transcript_color: "success",
+                      transcript_value: "100",
+                      state_machine_value: "75",
+                      comprehend_value: "70"
+                    })
+                  }
+                
+              }
+              if(data.status === "SUCCEEDED"){
+                self.setState({
+                  comprehend_color: "success",
+                  comprehend_value: "100",
+                  state_machine_color: "success",
+                  state_machine_value: "100",
+                  button: false
+                });
+                clearInterval(interval);
+              }
+              if (data.status === "FAILED" || data.status === "TIMED_OUT" || data.status === "ABORTED") {
+                self.setState({
+                  state_machine_color: "danger",
+                  state_machine_value: "100"
+                });
+                clearInterval(interval);
+              }
+            });
+          }
+        )
+        .catch(function(err) {
+          //console.log('Fetch Error :-S', err);
+        });
+      
+              /*
               if ("analysis" in response) {
-                  if ("labels" in response.analysis) {
-                      if (response.analysis.labels === "COMPLETE") {
-                          self.setState({
-                            labels_color: "success",
-                            labels_value: "100"
-                          });
-                      }
-                  }
-                  if ("celebs" in response.analysis) {
-                      if (response.analysis.celebs === "COMPLETE") {
-                          self.setState({
-                            celebs_color: "success",
-                            celebs_value: "100"
-                          });
-                      }
-                  }
-                  if ("faces" in response.analysis) {
-                      if (response.analysis.faces === "COMPLETE") {
-                          self.setState({
-                            faces_color: "success",
-                            faces_value: "100"
-                          });
-                      }
-                  }
-                  if ("face_matches" in response.analysis) {
-                      if (response.analysis.face_matches === "COMPLETE") {
-                          self.setState({
-                            face_matches_color: "success",
-                            face_matches_value: "100"
-                          });
-                      }
-                  }
-                  if ("persons" in response.analysis) {
-                      if (response.analysis.persons === "COMPLETE") {
-                          self.setState({
-                            persons_color: "success",
-                            persons_value: "100"
-                          });
-                      }
-                  }
                   if ("transcript" in response.analysis) {
                       if (response.analysis.transcript === "COMPLETE") {
                           self.setState({
@@ -111,8 +119,8 @@ class StatusModal extends Component {
                   if ("entities" in response.analysis) {
                       if (response.analysis.entities === "COMPLETE") {
                           self.setState({
-                            entities_color: "success",
-                            entities_value: "100"
+                            comprehend_color: "success",
+                            comprehend_value: "100"
                           });
                       }
                   }
@@ -131,12 +139,8 @@ class StatusModal extends Component {
                     state_machine_value: "100"
                   });
                   clearInterval(interval);
-              }
-            })
-            .catch(function(error) {
-              //console.log(error);
-            });
-        }
+              } */
+      }
 
     }
 
@@ -145,33 +149,6 @@ class StatusModal extends Component {
 
       if (this.props.format === '') {
           return(null);
-      }
-      else if (this.props.format === "png" || this.props.format === "jpg" || this.props.format === "jpeg") {
-          return(
-            <div>
-              <ModalHeader toggle={this.toggle}>Media Analysis Progress</ModalHeader>
-              <ModalBody>
-                <div>State Machine Progress</div>
-                <Progress animated color={this.state.state_machine_color} value={this.state.state_machine_value} />
-                <hr className="my-2" />
-                <div>Labels</div>
-                <Progress animated color={this.state.labels_color} value={this.state.labels_value} />
-                <div>Face Detection</div>
-                <Progress animated color={this.state.faces_color} value={this.state.faces_value} />
-                <div>Face Matching</div>
-                <Progress animated color={this.state.face_matches_color} value={this.state.face_matches_value} />
-                <div>Celebrities</div>
-                <Progress animated color={this.state.celebs_color} value={this.state.celebs_value} />
-              </ModalBody>
-              <ModalFooter>
-                <div>
-                  <Link to={result_link}>
-                    <Button color="primary" disabled={this.state.button}>View Results</Button>
-                  </Link>
-                </div>
-              </ModalFooter>
-            </div>
-          );
       }
       else if (this.props.format === "mp3" || this.props.format === "wav" || this.props.format === "wave" || this.props.format === "flac") {
           return(
@@ -183,10 +160,8 @@ class StatusModal extends Component {
                 <hr className="my-2" />
                 <div>Transcript</div>
                 <Progress animated color={this.state.transcript_color} value={this.state.transcript_value} />
-                <div>Key Entities</div>
-                <Progress animated color={this.state.entities_color} value={this.state.entities_value} />
-                <div>Key Phrases</div>
-                <Progress animated color={this.state.phrases_color} value={this.state.phrases_value} />
+                <div>Comprehend Jobs</div>
+                <Progress animated color={this.state.comprehend_color} value={this.state.comprehend_value} />
               </ModalBody>
               <ModalFooter>
                 <div>
@@ -198,43 +173,6 @@ class StatusModal extends Component {
             </div>
           );
       }
-      //BUGFIX/media-analysis-35 mov and mp4 resoults are the same removing if (mp4) {}
-      else if (this.props.format === "mp4" || this.props.format === "mov" ) {
-          return(
-            <div>
-              <ModalHeader toggle={this.toggle}>Media Analysis Progress</ModalHeader>
-              <ModalBody>
-                <div>State Machine Progress</div>
-                <Progress animated color={this.state.state_machine_color} value={this.state.state_machine_value} />
-                <hr className="my-2" />
-                <div>Labels</div>
-                <Progress animated color={this.state.labels_color} value={this.state.labels_value} />
-                <div>Face Detection</div>
-                <Progress animated color={this.state.faces_color} value={this.state.faces_value} />
-                <div>Face Matching</div>
-                <Progress animated color={this.state.face_matches_color} value={this.state.face_matches_value} />
-                <div>Person Detection</div>
-                <Progress animated color={this.state.persons_color} value={this.state.persons_value} />
-                <div>Celebrities</div>
-                <Progress animated color={this.state.celebs_color} value={this.state.celebs_value} />
-                <div>Transcript</div>
-                <Progress animated color={this.state.transcript_color} value={this.state.transcript_value} />
-                <div>Key Entities</div>
-                <Progress animated color={this.state.entities_color} value={this.state.entities_value} />
-                <div>Key Phrases</div>
-                <Progress animated color={this.state.phrases_color} value={this.state.phrases_value} />
-              </ModalBody>
-              <ModalFooter>
-                <div>
-                  <Link to={result_link}>
-                    <Button color="primary" disabled={this.state.button}>View Results</Button>
-                  </Link>
-                </div>
-              </ModalFooter>
-            </div>
-          );
-      }
-
     }
 }
 

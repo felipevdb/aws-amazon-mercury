@@ -80,13 +80,12 @@ class Upload extends Component {
             	console.log(result);
               
               self.setState({
-                /*
                 "media_file": preview,
                 "media_type": "image",
                 modal_status: true,
                 file: '',
                 format: file_ext,
-                object_id: uuid */
+                object_id: uuid,
                 uploading: false,
               });
               form.reset(); 
@@ -207,31 +206,30 @@ render() {
               </div>
               <div className="mt-3 mb-3">
                 <Form onSubmit={this.Upload}>
-                <FormGroup className="mt-3">
+                  <FormGroup className="mt-3">
                     <Input type="file" accept="audio/mp3, audio/flac, audio/wav, video/quicktime, video/mp4" name="file" value={this.file} onChange={this.Change} />
-                </FormGroup>
-                <div className="form-inline">
-                  <Input name="mediafilename" type="text" disabled placeholder={this.state.file.name} />
-                  <label>Number of speakers: </label>
-                  <select value={this.state.SpeakerNumber} onChange={this.handleChange}>
-                    <option hidden disabled selected value = "none"> -- select a number -- </option>
-                    <option value = "1">1</option>
-                    <option value = "2">2</option>
-                    <option value = "3">3</option>
-                    <option value = "4">4</option>
-                    <option value = "5">5</option>
-                    <option value = "6">6</option>
-                    <option value = "7">7</option>
-                    <option value = "8">8</option>
-                    <option value = "9">9</option>
-                    <option value = "10">10</option>
-                  </select>
-                  
-                </div>
-                <FormText color="muted"> Media will be uploaded with the same name </FormText>
-                <div>
-                  <Button type="submit" disabled={this.state.file === ''}>Upload Meeting</Button>
-                </div>
+                  </FormGroup>
+                  <div className="form-inline">
+                    <Input name="mediafilename" type="text" disabled placeholder={this.state.file.name} />
+                    <label>Number of speakers: </label>
+                    <select value={this.state.SpeakerNumber} onChange={this.handleChange}>
+                      <option hidden disabled selected value = "none"> -- select a number -- </option>
+                      <option value = "1">1</option>
+                      <option value = "2">2</option>
+                      <option value = "3">3</option>
+                      <option value = "4">4</option>
+                      <option value = "5">5</option>
+                      <option value = "6">6</option>
+                      <option value = "7">7</option>
+                      <option value = "8">8</option>
+                      <option value = "9">9</option>
+                      <option value = "10">10</option>
+                    </select>
+                  </div>
+                  <FormText color="muted"> Media will be uploaded with the same name </FormText>
+                  <div>
+                    <Button type="submit" disabled={this.state.file === ''}>Upload Meeting</Button>
+                  </div>
                 </Form>
               </div>
           </Col>
