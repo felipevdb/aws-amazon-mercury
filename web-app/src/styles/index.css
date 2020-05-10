@@ -17,3 +17,7 @@ a {
 #root{
 	text-align: center;
 }
+
+hr{
+	border: none;
+}
