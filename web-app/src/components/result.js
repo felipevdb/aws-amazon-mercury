@@ -241,7 +241,7 @@ class Result extends Component {
                     <Progress animated color="warning" value="100" />
                     </ModalBody>
                 </Modal>
-                    <AudioResults mediafile={this.state.media_file} meetingName={this.state.meetingName} filename={this.state.filename} filetype={this.state.file_type}  transcript={transcript}/>
+                    <AudioResults mediafile={this.state.media_file} guid={this.props.match.params.objectid} meetingName={this.state.meetingName} filename={this.state.filename} filetype={this.state.file_type}  transcript={transcript}/>
                 </div>
 
             );
