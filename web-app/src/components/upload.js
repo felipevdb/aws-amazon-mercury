@@ -28,7 +28,8 @@ class Upload extends Component {
         object_id: '',
         error_msg: 'Error',
         SpeakerNumber: "none",
-        audioDuration: ''
+        audioDuration: '',
+        meetingName: ''
       }
 
       this.Change = this.Change.bind(this);
@@ -43,6 +44,10 @@ class Upload extends Component {
       e.preventDefault();
       var self = this;
       var form = e.target;
+
+      this.state.meetingName = e.target[1].value
+
+      if(this.state.meetingName === '') this.state.meetingName = this.state.file.name
 
       if (this.state.file !== '' && this.state.SpeakerNumber !== 'none') {
         
@@ -68,7 +73,8 @@ class Upload extends Component {
         let tags = [
           'guid='+uuid,
           'numberSpeaker='+this.state.SpeakerNumber,
-          'audioDuration='+this.state.audioDuration
+          'audioDuration='+this.state.audioDuration,
+          'meetingName='+this.state.meetingName
         ].join("&");
         
         Storage.put(filename, this.state.file, {
@@ -209,10 +215,14 @@ render() {
                   <FormGroup className="mt-3">
                     <Input type="file" accept="audio/mp3, audio/flac, audio/wav, video/quicktime, video/mp4" name="file" value={this.file} onChange={this.Change} />
                   </FormGroup>
-                  <div className="form-inline">
-                    <Input name="mediafilename" type="text" disabled placeholder={this.state.file.name} />
-                    <label>Number of speakers: </label>
-                    <select value={this.state.SpeakerNumber} onChange={this.handleChange}>
+                  <hr />
+                  <FormGroup>
+                  <label>Meeting Name: </label>
+                  <Input name="meetingname" type="text" disabled={this.state.file === ''} placeholder={this.state.file.name} />
+                  <div>
+                    <br/>
+                    <label>Number of speakers:</label>
+                    <select value={this.state.SpeakerNumber} disabled={this.state.file === ''} onChange={this.handleChange}>
                       <option hidden disabled selected value = "none"> -- select a number -- </option>
                       <option value = "1">1</option>
                       <option value = "2">2</option>
@@ -230,6 +240,7 @@ render() {
                   <div>
                     <Button type="submit" disabled={this.state.file === ''}>Upload Meeting</Button>
                   </div>
+                  </FormGroup>
                 </Form>
               </div>
           </Col>

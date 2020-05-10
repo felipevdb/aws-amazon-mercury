@@ -31,7 +31,7 @@ class StatusModal extends Component {
     getStatus() {
       var self = this;
       var requestParams = {};
-      var url = ['URL','status',this.props.objectid].join('/');
+      var url = [URL,'status',this.props.objectid].join('/');
       var myHeaders = new Headers();
       var raw = "";
 
@@ -41,7 +41,7 @@ class StatusModal extends Component {
         redirect: 'follow'
       };
 
-      var interval = setInterval(function(){ getStateMachineStatus() },25000);
+      var interval = setInterval(function(){ getStateMachineStatus() },30000);
 
       function getStateMachineStatus() {
         fetch(url, requestOptions)
@@ -97,49 +97,6 @@ class StatusModal extends Component {
         .catch(function(err) {
           //console.log('Fetch Error :-S', err);
         });
-      
-              /*
-              if ("analysis" in response) {
-                  if ("transcript" in response.analysis) {
-                      if (response.analysis.transcript === "COMPLETE") {
-                          self.setState({
-                            transcript_color: "success",
-                            transcript_value: "100"
-                          });
-                      }
-                  }
-                  if ("phrases" in response.analysis) {
-                      if (response.analysis.phrases === "COMPLETE") {
-                          self.setState({
-                            phrases_color: "success",
-                            phrases_value: "100"
-                          });
-                      }
-                  }
-                  if ("entities" in response.analysis) {
-                      if (response.analysis.entities === "COMPLETE") {
-                          self.setState({
-                            comprehend_color: "success",
-                            comprehend_value: "100"
-                          });
-                      }
-                  }
-              }
-              if (response.state_machine_status === "SUCCEEDED") {
-                  self.setState({
-                    state_machine_color: "success",
-                    state_machine_value: "100",
-                    button: false
-                  });
-                  clearInterval(interval);
-              }
-              if (response.state_machine_status === "FAILED" || response.state_machine_status === "TIMED_OUT" || response.state_machine_status === "ABORTED") {
-                  self.setState({
-                    state_machine_color: "danger",
-                    state_machine_value: "100"
-                  });
-                  clearInterval(interval);
-              } */
       }
 
     }
@@ -155,7 +112,7 @@ class StatusModal extends Component {
             <div>
               <ModalHeader toggle={this.toggle}>Media Analysis Progress</ModalHeader>
               <ModalBody>
-                <div>State Machine Progress</div>
+                <div>Workflow Progress</div>
                 <Progress animated color={this.state.state_machine_color} value={this.state.state_machine_value} />
                 <hr className="my-2" />
                 <div>Transcript</div>

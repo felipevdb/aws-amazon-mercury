@@ -9,6 +9,7 @@ import { NavbarBrand, Navbar, Nav, NavItem, NavLink } from 'reactstrap';
 import Home from './home';
 import Settings from './settings';
 import Upload from './upload';
+import Result from './result';
 
 
 
@@ -26,6 +27,15 @@ Amplify.configure({
       identityPoolId: 'us-east-1:7ce4975b-92b3-4d47-b4b6-05454a09286b'
     }
   },
+  API: {
+    endpoints: [
+      {
+          name: 'teste',
+          region: 'teste',
+          endpoint: 'teste'
+      }
+    ]
+  }
 });
 
 class App extends Component {
@@ -57,6 +67,7 @@ class App extends Component {
                 <Route path='/home' component={Home} />
                 <Route path='/upload' component={Upload} />
                 <Route path='/settings' component={Settings} />
+                <Route path='/result/:objectid' component={Result} />
             </Switch>
           </div>
         </Router>
