@@ -7,7 +7,7 @@ class AudioResults extends Component {
   constructor(props) {
 	    super(props);
       this.state = {
-        activeTab: 'transcript',
+        activeTab: 'analysis',
         captions: false
       }
       this.tabToggle = this.tabToggle.bind(this);
@@ -126,10 +126,11 @@ class AudioResults extends Component {
           setTimeout(function(){
               audio.currentTime = 0;
               audio.play();
-              audio.draw();
           }, 20);
       }
   }
+
+  
 
   render() {
 
@@ -137,26 +138,28 @@ class AudioResults extends Component {
     var file_name = this.props.filename;
     var media_source = this.props.mediafile;
     var transcript = this.props.transcript;
-    var entities = this.props.entities;
-    var phrases = this.props.phrases;
+    var analysis = '';
+    var meeting_name = this.props.meetingName;
 
         return(
           <Container>
             <Row>
               <Col>
                 <div>
-                  <h1 align="center">{file_name}</h1>
+                    <h1 align="center">{meeting_name}</h1>
+                    <hr className="my-2" />
+                    <p className="lead" align="center">{file_name}</p>
                 </div>
               </Col>
             </Row>
             <Row>
-              <Col md="8">
-                <div id="resultview" align="center" className='mb-3' style={{"overflow":"scroll", "maxWidth":"750px", "maxHeight": "400px"}}>
-                  <img alt="preview" id="resultaudio_img" src={audio_img} style={{"overflow":"scroll", "maxWidth":"750px", "maxHeight": "400px"}} />
+              <Col-6>
+                <div id="resultview" align="center" className='mb-3' style={{"maxWidth":"500px", "maxHeight": "200px"}}>
+                  <img alt="preview" id="resultaudio_img" src={audio_img} style={{"overflow":"scroll", "maxWidth":"500px", "maxHeight": "200px"}} />
                   <audio id="resultaudio" src={media_source}/>
                 </div>
-              </Col>
-              <Col md="4">
+              </Col-6>
+              <Col>
                 <div>
                   <h5>Controls:</h5>
                   <hr className="my-2" />
@@ -165,7 +168,7 @@ class AudioResults extends Component {
                   <Button className="mr-2 my-2" color="info" onClick={() => {this.audioControl('play'); }}>Play</Button>
                   <Button className="mr-2 my-2" color="info" onClick={() => {this.audioControl('pause'); }}>Pause</Button>
                   <Button className="mr-2 my-2" color="info" onClick={() => {this.audioControl('restart'); }}>Restart</Button>
-                  <Button className="mr-2 my-2" color="info" active={this.state.captions} onClick={() => {this.setState({captions: !this.state.captions}); }}>Captions</Button>
+                  {/*<Button className="mr-2 my-2" color="info" active={this.state.captions} onClick={() => {this.setState({captions: !this.state.captions}); }}>Captions</Button>*/}
                 </div>
               </Col>
             </Row>
@@ -174,27 +177,17 @@ class AudioResults extends Component {
                 <div>
                 <Nav tabs className="mb-3">
                     <NavItem>
+                      <NavLink active={this.state.activeTab === "analysis"} onClick={() => { this.tabToggle('analysis'); }}>Analysis</NavLink>
+                    </NavItem>
+                    <NavItem>
                       <NavLink active={this.state.activeTab === "transcript"} onClick={() => { this.tabToggle('transcript'); }}>Transcript</NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink active={this.state.activeTab === "entities"} onClick={() => { this.tabToggle('entities'); }}>Entities</NavLink>
-                    </NavItem>
-                    <NavItem>
-                      <NavLink active={this.state.activeTab === "phrases"} onClick={() => { this.tabToggle('phrases'); }}>Phrases</NavLink>
                     </NavItem>
                   </Nav>
                   <TabContent activeTab={this.state.activeTab}>
-                    <TabPane tabId="phrases">
+                    <TabPane tabId="analysis">
                       <Row>
                         <Col align="center">
-                          {phrases}
-                        </Col>
-                      </Row>
-                    </TabPane>
-                    <TabPane tabId="entities">
-                      <Row>
-                        <Col align="center">
-                          {entities}
+                          {analysis}
                         </Col>
                       </Row>
                     </TabPane>

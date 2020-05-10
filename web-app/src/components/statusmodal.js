@@ -31,7 +31,7 @@ class StatusModal extends Component {
     getStatus() {
       var self = this;
       var requestParams = {};
-      var url = [URL,'status',this.props.objectid].join('/');
+      var url = ['https://rehns3s8gj.execute-api.us-east-1.amazonaws.com/prod','status',this.props.objectid].join('/');
       var myHeaders = new Headers();
       var raw = "";
 
