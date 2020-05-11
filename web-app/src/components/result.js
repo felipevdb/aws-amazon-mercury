@@ -54,7 +54,6 @@ class Result extends Component {
 
     var url = ['https://rehns3s8gj.execute-api.us-east-1.amazonaws.com/prod','/details',this.props.match.params.objectid].join('/');
     var myHeaders = new Headers();
-      var raw = "";
 
       var requestOptions = {
         method: 'GET',
