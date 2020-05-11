@@ -4,6 +4,8 @@ import Amplify from 'aws-amplify';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import { NavbarBrand, Navbar, Nav, NavItem, NavLink } from 'reactstrap';
 
+import logo_img from '../img/amazon_mercury_logo.png'
+
 
 /* Components import */
 import Home from './home';
@@ -52,7 +54,14 @@ class App extends Component {
         <Router>
           <div>
             <Navbar color="dark">
-              <NavbarBrand tag={Link} to="/home">Amazon Mercury</NavbarBrand>
+            <NavbarBrand tag={Link} to="/home">
+              <img alt="preview" id="resultaudio_img" src={logo_img} style={{"maxWidth":"50px", "maxHeight": "50px"}} /> 
+              </NavbarBrand>
+              <Nav  style={{'text-align': 'center'}}>
+              <NavItem color="white">
+                  <NavLink tag={Link} to="/home" className="text-light" style={{'text-align': 'center'}}>Amazon Mercury</NavLink>
+                </NavItem>
+              </Nav>
               <Nav className="ml-auto">
                 <NavItem color="white">
                   <NavLink tag={Link} to="/upload" className="text-light">Upload</NavLink>
