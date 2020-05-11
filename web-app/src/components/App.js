@@ -10,6 +10,7 @@ import Home from './home';
 import Settings from './settings';
 import Upload from './upload';
 import Result from './result';
+import Browse from './browse'
 
 
 
@@ -57,6 +58,9 @@ class App extends Component {
                   <NavLink tag={Link} to="/upload" className="text-light">Upload</NavLink>
                 </NavItem>
                 <NavItem>
+                  <NavLink tag={Link} to="/browse" className="text-light">Browse</NavLink>
+                </NavItem>
+                <NavItem>
                   <NavLink tag={Link} to="/settings" className="text-light">Settings</NavLink>
                 </NavItem>
               </Nav>
@@ -66,6 +70,7 @@ class App extends Component {
                 <Route exact path='/' component={Home} />
                 <Route path='/home' component={Home} />
                 <Route path='/upload' component={Upload} />
+                <Route path='/browse' component={Browse} />
                 <Route path='/settings' component={Settings} />
                 <Route path='/result/:objectid' component={Result} />
             </Switch>
