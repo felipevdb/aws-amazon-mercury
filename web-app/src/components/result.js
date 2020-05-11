@@ -92,6 +92,7 @@ class Result extends Component {
                         filename: data.fileName,
                         meetingName: data.meetingName
                     });
+                    self.getTranscript();
                     
                 });
         }).catch(function(err) {
@@ -169,15 +170,29 @@ class Result extends Component {
 
   getTranscript() {
     var self = this;
-    var transcript_path = ['/lookup',this.props.match.params.objectid,'transcript'].join('/');
-    API.get('MediaAnalysisApi', transcript_path, {})
-      .then(function(data) {
-          self.setState({
-              "transcript": data.Transcripts[0].Transcript
-          });
-      })
-      .catch(function(err) {
-          //console.log(err);
+    var url = ['https://rehns3s8gj.execute-api.us-east-1.amazonaws.com/prod', '/lookup',this.props.match.params.objectid].join('/');
+    var myHeaders = new Headers();
+
+      var requestOptions = {
+        method: 'GET',
+        headers: myHeaders,
+        redirect: 'follow'
+      };
+      fetch(url, requestOptions)
+      .then(
+          function(response) {
+              if (response.status !== 200) {
+                  console.log('Looks like there was a problem. Status Code: ' +
+                    response.status);
+                  return;
+                }
+              response.json().then(function(data) {
+                  self.setState({
+                      transcript: data.transcript,
+                  });        
+              });
+      }).catch(function(err) {
+              //console.log('Fetch Error :-S', err);
       });
   }
 

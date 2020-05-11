@@ -217,9 +217,9 @@ render() {
                   </FormGroup>
                   <hr />
                   <FormGroup>
-                  <label>Meeting Name: </label>
+                  <div style={{'text-align': 'left'}}><label>Meeting Name: </label> </div>
                   <Input name="meetingname" type="text" disabled={this.state.file === ''} placeholder={this.state.file.name} />
-                  <div>
+                  <div style={{'text-align': 'left'}}>
                     <br/>
                     <label>Number of speakers:</label>
                     <select value={this.state.SpeakerNumber} disabled={this.state.file === ''} onChange={this.handleChange}>
